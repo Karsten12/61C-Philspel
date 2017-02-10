@@ -79,6 +79,7 @@ unsigned int stringHash(void *s) {
     }
     //fprintf(stderr, "Need to define stringHash\n");
     //exit(0);
+    return 0;
 }
 
 /*
@@ -131,7 +132,9 @@ void readDictionary(char *filename) {
             str1[i] = '\0';
             char *key = (char *) malloc((strlen(str1) + 1) * sizeof(char));
             strcpy(key, str1);
-            insertData(dictionary, key, key);
+            if (findData(dictionary, key) == NULL) {
+                insertData(dictionary, key, key);
+            }
             i = 0;
             total = 70;
             memset(str1, 0, sizeof str1);
@@ -143,7 +146,7 @@ void readDictionary(char *filename) {
             str1 = str2;
             total = total * 2;
         }
-        str1[i] = c;
+        str1[i] = (char) c;
         i++;
     }
     free(str1);
@@ -163,7 +166,6 @@ void readDictionary(char *filename) {
 //    }
 // "Super31337-61c" should be treated as a single dictionary entry, that can never be matched as it contains non alphabet characters
 //    fprintf(stderr, "Need to define readDictionary\n");
-
 }
 
 
@@ -194,11 +196,12 @@ void processInput() {
     char *str1 = (char *) malloc(70);
     char *str2 = (char *) malloc(70);
     char *str3 = (char *) malloc(70);
-    int c;
+    int c = 0;
     int i = 0;
     int total = 70;
 
     while ((c = fgetc(stdin)) != EOF) {
+
         if (isalpha(c) != 0) {
             if (i == total) {
                 char *str4 = (char *) realloc(str1, total * 2);
@@ -217,49 +220,10 @@ void processInput() {
             }
             str3[i] = (char) tolower(c);
             i++;
+
         } else {
-            if (isspace(c)) {
-                if (isalpha(str1[0])) {
-                    str1[i] = '\0';
-                    str2[i] = '\0';
-                    str3[i] = '\0';
-                    if (findData(dictionary, str1) == NULL && findData(dictionary, str2) == NULL &&
-                        findData(dictionary, str3) == NULL) {
-                        fprintf(stdout, "%s [sic] ", str1);
-                    } else {
-                        if (strlen(str1) != 0) {
-                            fprintf(stdout, "%s ", str1);
-                        }
-                    }
-                }
-                i = 0;
-                memset(str1, 0, sizeof str1);
-                memset(str2, 0, sizeof str2);
-                memset(str3, 0, sizeof str3);
-                //fprintf(stdout, " ");
-                continue;
-            }
             if (c == '\n') {
-                if (isalpha(str1[0])) {
-                    str1[i] = '\0';
-                    str2[i] = '\0';
-                    str3[i] = '\0';
-                    if (findData(dictionary, str1) == NULL && findData(dictionary, str2) == NULL &&
-                        findData(dictionary, str3) == NULL) {
-                        fprintf(stdout, "%s [sic]", str1);
-                    } else {
-                        if (strlen(str1) != 0) {
-                            fprintf(stdout, "%s", str1);
-                        }
-                    }
-                }
-                i = 0;
-                memset(str1, 0, sizeof str1);
-                memset(str2, 0, sizeof str2);
-                memset(str3, 0, sizeof str3);
-                continue;
-            }
-            if (isalpha(c) == 0) {
+                //fprintf(stdout, "HITNEWLINE");
                 if (isalpha(str1[0])) {
                     str1[i] = '\0';
                     str2[i] = '\0';
@@ -275,12 +239,45 @@ void processInput() {
                 } else {
                     fprintf(stdout, "%c", c);
                 }
-                i = 0;
-                memset(str1, 0, sizeof str1);
-                memset(str2, 0, sizeof str2);
-                memset(str3, 0, sizeof str3);
-                continue;
             }
+            else if (isspace(c)) {
+                if (isalpha(str1[0])) {
+                    str1[i] = '\0';
+                    str2[i] = '\0';
+                    str3[i] = '\0';
+                    if (findData(dictionary, str1) == NULL && findData(dictionary, str2) == NULL &&
+                        findData(dictionary, str3) == NULL) {
+                        fprintf(stdout, "%s [sic]", str1);
+                    } else {
+                        if (strlen(str1) != 0) {
+                            fprintf(stdout, "%s", str1);
+                        }
+                    }
+                }
+                fprintf(stdout, " ");
+            }
+            else if (isalpha(c) == 0) {
+                if (isalpha(str1[0])) {
+                    str1[i] = '\0';
+                    str2[i] = '\0';
+                    str3[i] = '\0';
+                    if (findData(dictionary, str1) == NULL && findData(dictionary, str2) == NULL &&
+                        findData(dictionary, str3) == NULL) {
+                        fprintf(stdout, "%s [sic]%c", str1, c);
+                    } else {
+                        if (strlen(str1) != 0) {
+                            fprintf(stdout, "%s%c", str1, c);
+                            //fprintf(stdout, "\n");
+                        }
+                    }
+                } else {
+                    fprintf(stdout, "%c", c);
+                }
+            }
+            i = 0;
+            memset(str1, 0, sizeof str1);
+            memset(str2, 0, sizeof str2);
+            memset(str3, 0, sizeof str3);
         }
     }
     if (isalpha(str1[0])) {
@@ -307,7 +304,6 @@ void processInput() {
     free(str2);
     free(str3);
     //fprintf(stderr, "Need to define processInput\n");
-    exit(0);
 }
 
 
