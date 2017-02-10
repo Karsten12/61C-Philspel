@@ -73,12 +73,10 @@ unsigned int stringHash(void *s) {
     unsigned int hash = 5381;
     char *string = (char *) s;
     int c;
-    while (c = *string++) {
+    while ((c = *string++)) {
         hash = ((hash << 5) + hash) + c;
         return hash;
     }
-    //fprintf(stderr, "Need to define stringHash\n");
-    //exit(0);
     return 0;
 }
 
@@ -98,8 +96,6 @@ int stringEquals(void *s1, void *s2) {
     } else {
         return 0;
     }
-//    fprintf(stderr, "Need to define stringEquals\n");
-//    exit(0);
 }
 
 /*
@@ -137,8 +133,7 @@ void readDictionary(char *filename) {
             }
             i = 0;
             total = 70;
-            memset(str1, 0, sizeof str1);
-            fprintf(stderr, "%s\n", findData(dictionary, key));
+            memset(str1, 0, strlen(str1) * 1);
             continue;
         }
         if (i == total) {
@@ -150,22 +145,6 @@ void readDictionary(char *filename) {
         i++;
     }
     free(str1);
-
-//    while (fscanf(fp, "%1023s", str1) != EOF) { // IF CAUSES INFINITE LOOP TRY != -1
-//
-//        fprintf(stdout, "%s\n", str1);
-//
-//        //CHECK FOR WORD ALREADY EXISTING INSIDE THE DICTIONARY
-//        // Allocate memory of the length of charstring + 1 (for the null terminator)
-//        // CREDIT: http://stackoverflow.com/questions/17522327/is-null-character-included-while-allocating-using-malloc
-//        char *key = (char *) malloc((strlen(str1) + 1) * sizeof(char));
-//        strcpy(key, str1);
-//        insertData(dictionary, key, str1);
-//
-//        fprintf(stdout, "%s\n", findData(dictionary, key));
-//    }
-// "Super31337-61c" should be treated as a single dictionary entry, that can never be matched as it contains non alphabet characters
-//    fprintf(stderr, "Need to define readDictionary\n");
 }
 
 
@@ -238,8 +217,7 @@ void processInput() {
                 } else {
                     fprintf(stdout, "%c", c);
                 }
-            }
-            else if (isspace(c)) {
+            } else if (isspace(c)) {
                 if (isalpha(str1[0])) {
                     str1[i] = '\0';
                     str2[i] = '\0';
@@ -254,8 +232,7 @@ void processInput() {
                     }
                 }
                 fprintf(stdout, " ");
-            }
-            else if (isalpha(c) == 0) {
+            } else if (isalpha(c) == 0) {
                 if (isalpha(str1[0])) {
                     str1[i] = '\0';
                     str2[i] = '\0';
@@ -266,7 +243,6 @@ void processInput() {
                     } else {
                         if (strlen(str1) != 0) {
                             fprintf(stdout, "%s%c", str1, c);
-                            //fprintf(stdout, "\n");
                         }
                     }
                 } else {
@@ -274,9 +250,9 @@ void processInput() {
                 }
             }
             i = 0;
-            memset(str1, 0, sizeof str1);
-            memset(str2, 0, sizeof str2);
-            memset(str3, 0, sizeof str3);
+            memset(str1, 0, strlen(str1) * 1);
+            memset(str2, 0, strlen(str2) * 1);
+            memset(str3, 0, strlen(str3) * 1);
         }
     }
     if (isalpha(str1[0])) {
@@ -292,96 +268,7 @@ void processInput() {
             }
         }
     }
-
-
-    // 3 Cases
-    // Regular input
-    // Regular input w/ all letters converted to lowercase but the first
-    // All letters converted to lowercase
-
     free(str1);
     free(str2);
     free(str3);
-    //fprintf(stderr, "Need to define processInput\n");
 }
-
-
-//    while ((c = fgetc(stdin)) != EOF) {
-//
-//        if (isalpha(c) != 0) {
-//            str1[i] = (char) c;
-//            if (i == 0) {
-//                str2[0] = (char) toupper(c);
-//            } else{
-//                str2[i] = (char) tolower(c);
-//            }
-//            str3[i] = (char) tolower(c);
-//            i++;
-//        } else {
-//            if (isspace(c)) {
-//                if (isalpha(str1[0]) && findData(dictionary, str1) == NULL) {
-//                    fprintf(stdout, "%s [sic]", str1);
-//                } else {
-//                    if (strlen(str1) != 0) {
-//                        fprintf(stdout, "%s", str1);
-//                    }
-//                }
-//                i = 0;
-//                memset(str1, 0, sizeof str1);
-//                fprintf(stdout, " ");
-//                continue;
-//            }
-//            if (c == '\n') {
-//                if (isalpha(str1[0]) && findData(dictionary, str1) == NULL) {
-//                    fprintf(stdout, "%s [sic]", str1);
-//                } else {
-//                    if (strlen(str1) != 0) {
-//                        fprintf(stdout, "%s", str1);
-//                    }
-//                }
-//                i = 0;
-//                memset(str1, 0, sizeof str1);
-//                continue;
-//            }
-//            if (isalpha(c) == 0) {
-//                if (isalpha(str1[0]) && findData(dictionary, str1) == NULL) {
-//                    fprintf(stdout, "%s [sic]%c", str1, c);
-//                } else {
-//                    if (strlen(str1) != 0) {
-//                        fprintf(stdout, "%s%c", str1, c);
-//                    }
-//                }
-//                i = 0;
-//                memset(str1, 0, sizeof str1);
-//                continue;
-//            }
-//        }
-//    }
-
-
-//    while (c = getchar()) {
-//
-//        if (c == EOF) {
-//            break;
-//        }
-//
-//        if (isalpha(c) != 0) {
-//            str1[i] = (char) c;
-//            i++;
-//        } else {
-////            if (c == '\n') {
-////                continue;
-////            }
-//            str1[i] = '\0';
-//
-//            if (findData(dictionary, str1) == NULL) {
-//                fprintf(stdout, "%s [sic]", str1);
-//            } else {
-//                fprintf(stdout, "%s", str1);
-//            }
-//
-//            i = 0;
-//            fprintf(stdout, "%c", c);
-//        }
-//    }
-
